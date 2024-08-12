@@ -1,0 +1,55 @@
+version: '3'
+services:
+  mysql:
+    container_name: gozero-mysql8
+    image: mysql:8.1.0
+    restart: always
+    ports:
+      - 13306:3306
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - /Users/geyan/projects/go-examples/docker/mysql/data:/var/lib/mysql
+      - /Users/geyan/projects/go-examples/docker/mysql/conf:/etc/mysql/conf.d/
+      - /Users/geyan/projects/go-examples/docker/mysql/logs:/logs
+    command:
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+      --lower_case_table_names=1
+  Redis:
+    container_name: gozero-redis6
+    image: redis:7.2.1
+    restart: always
+    volumes:
+      - /Users/geyan/projects/go-examples/docker/redis/data:/data
+      - /Users/geyan/projects/go-examples/docker/redis/conf/redis.conf:/etc/redis/redis.conf
+    ports:
+      - 16379:6379
+    command: redis-server /etc/redis/redis.conf
+  Etcd:
+    container_name: gozero-etcd3
+    image: bitnami/etcd:3.5.9
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+    privileged: true
+    volumes:
+      - /Users/geyan/projects/go-examples/docker/etcd/data:/bitnami/etcd/data
+    ports:
+      - 12379:2379
+      - 12380:2380
+  zookeeper:
+    image: docker.io/bitnami/zookeeper:3.8
+    container_name: gozero-zookeeper
+    ports:
+      - "12181:2181"
+    volumes:
+      - /Users/geyan/projects/go-examples/docker/zk/bitnami:/bitnami
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes # 匿名登录
