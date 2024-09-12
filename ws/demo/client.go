@@ -16,14 +16,24 @@ func main() {
 	done := make(chan struct{})
 
 	go func() {
+		for {
+			err = c.WriteMessage(websocket.TextMessage, []byte("heartbeat-000"))
+			if err != nil {
+				log.Println("aaaaa----WriteMessage error:", err)
+				return
+			}
+		}
+	}()
+
+	go func() {
 		defer close(done)
 		for {
 			_, message, err := c.ReadMessage()
 			if err != nil {
-				log.Println("Read error:", err)
+				log.Println("xxxxx--Read error:", err)
 				return
 			}
-			log.Printf("Received: %s", message)
+			log.Printf("xxxx-Received: %s", message)
 		}
 	}()
 

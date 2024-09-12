@@ -20,14 +20,21 @@ func echo(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Close()
 
+	//go func() {
+	//	err2 := conn.WriteMessage(websocket.TextMessage, []byte("0xAAC"))
+	//	if err != nil {
+	//		log.Println("Write error:", err2)
+	//	}
+	//}()
+
 	for {
 		messageType, message, err := conn.ReadMessage()
 		if err != nil {
-			log.Println("Read error:", err)
+			log.Println("kkk---Read error:", err)
 			break
 		}
 
-		log.Printf("Received: %s", message)
+		log.Printf("kkk--Received: %s", message)
 
 		err = conn.WriteMessage(messageType, message)
 		if err != nil {
