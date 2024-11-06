@@ -14,8 +14,8 @@ type Config struct {
 type Pool struct {
 	cap         int32
 	running     int32
-	workers     WorkerQueue
-	workerCache sync.Pool // 存储worker
+	workers     WorkerQueue // 活跃的worker，先获取活跃的worker，如果为nil，再从存储的worker中获取
+	workerCache sync.Pool   // 存储的worker
 	conf        *Config
 	mux         sync.Mutex
 }
